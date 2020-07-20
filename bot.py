@@ -65,7 +65,7 @@ class Bot():
                 await bot.logout()
                 return
 
-            if message.content.startswith(f"{PREFIX}help"):
+            if message.content.startswith(f"{PREFIX}help") or message.content.startswith(f"{PREFIX}aide"):
                 embed = discord.Embed(title="Aide :", color=0x00ff00)
                 embed.add_field(name=f"{PREFIX}liste", value=f"Liste les différentes actions déjà programmées", inline=False)
                 embed.add_field(name=f"{PREFIX}ajouter", value=f"Programmer une chasse au trésor", inline=False)
@@ -222,8 +222,11 @@ class Bot():
                     except asyncio.TimeoutError:
                         await msg_base.edit(content="Trop Tard...")
                         return
+                    try:
+                        await msg_base.clear_reactions()
+                    except Exception as e:
+                        print("Erreur clear reactions : ",e)
 
-                    await msg_base.clear_reactions()
 
                     if reaction.emoji == "1️⃣":
                         if annonce == True:
