@@ -289,6 +289,11 @@ class Bot():
                 except asyncio.TimeoutError:
                     # await msg_base.edit(content="Trop Tard...")
                     return
+
+                if message.author.id != 161908043439800320:
+                    await message.channel.send("Erreur, tu n'as pas la permission de faire ça.")
+                    return
+
                 await msg_base.remove_reaction("1️⃣",bot.user)
                 try:
                     await msg_base.clear_reactions()
