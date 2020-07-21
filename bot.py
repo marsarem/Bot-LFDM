@@ -67,12 +67,16 @@ class Bot():
 
             if message.content.startswith(f"{PREFIX}help") or message.content.startswith(f"{PREFIX}aide"):
                 embed = discord.Embed(title="Aide :", color=0x00ff00)
-                embed.add_field(name=f"{PREFIX}liste", value=f"Liste les différentes actions déjà programmées", inline=False)
+                # embed.add_field(name=f"{PREFIX}liste", value=f"Liste les différentes actions déjà programmées", inline=False)
                 embed.add_field(name=f"{PREFIX}ajouter", value=f"Programmer une chasse au trésor", inline=False)
                 await message.channel.send(embed=embed)
                 return
 
             if message.content.startswith(f"{PREFIX}ajouter"):
+                if message.author.id != 161908043439800320:
+                    await message.channel.send("Erreur, tu n'as pas la permission de faire ça.")
+                    return
+
                 text_msg = "**__Menu pour ajouter une action__**\n\n:one: = Programmer une chasse au trésor"#\n:two: = Envoyer un message dans un channel précis à une heure précise"
                 msg_base = await message.channel.send(text_msg)
                 await msg_base.add_reaction("1️⃣")
@@ -248,6 +252,51 @@ class Bot():
                         msg_base = await message.channel.send(text_msg)
                         # await msg_base.edit(content=text_msg)
                         return
+
+            # if message.content.startswith(f"{PREFIX}liste"):
+            #     data = self.recup_data_json()
+            #     if data == []
+            #         msg_liste = "Pas de chasse au trésor programmée"
+            #         await message.channel.send(msg_liste)
+            #         return
+
+            #     msg_liste = "__**Voici la liste des chasses au trésor : **__\n\n" \
+
+            #     a = 0
+            #     for i in data:
+            #         a += 1
+
+            #         msg_liste += f"__Chasse au trésor {a} : __\n" \
+            #                         f"Heure de la chasse au trésor : aujourd'hui à {i["heure_chasse"]}h \n" \
+            #                         f"Salon de la chasse au trésor : <#{i["salon_chasse"]}>\n" \
+
+            #         if i["annonce"] == True:
+            #             msg_liste += f"Salon de l'annonce de la chasse au trésor : <#{i["salon_annonce"]}>\n" \
+            #                         f"Message d'annonce : {i["message_annonce"]}\n\n" \
+
+            #     msg_liste += "\nPour supprimez une chasse, cliquez sur la réaction :one:"
+
+            #     msg_base = await message.channel.send(msg_liste)
+
+            #     def check(reaction, user):
+            #         return user == message.author and (str(reaction.emoji) == "1️⃣")
+
+            #     try:
+            #         reaction, user = await bot.wait_for('reaction_add', timeout=20.0, check=check)
+            #     except asyncio.TimeoutError:
+            #         # await msg_base.edit(content="Trop Tard...")
+            #         return
+            #     await msg_base.remove_reaction("1️⃣")
+            #     try:
+            #         await msg_base.clear_reactions()
+            #     except Exception as e:
+            #         print("Erreur clear reactions : ",e)
+
+            #     msg = "__**Quelle chasse au trésor voulez-vous supprimer ? __**"
+
+
+
+
 
 
         async def background():
