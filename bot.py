@@ -69,7 +69,7 @@ class Bot():
 
             if message.content.startswith(f"{PREFIX}help") or message.content.startswith(f"{PREFIX}aide"):
                 embed = discord.Embed(title="Aide :", color=0x00ff00)
-                # embed.add_field(name=f"{PREFIX}liste", value=f"Liste les différentes actions déjà programmées", inline=False)
+                embed.add_field(name=f"{PREFIX}liste", value=f"Liste les différentes actions déjà programmées et permet de les supprimer", inline=False)
                 embed.add_field(name=f"{PREFIX}ajouter", value=f"Programmer une chasse au trésor", inline=False)
                 await message.channel.send(embed=embed)
                 return
