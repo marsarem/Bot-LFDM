@@ -9,15 +9,14 @@ On choisit :
 - le salon de la chasse au trésor (que le bot va rendre accessible quand la chasse commencera)
 - on peut spécifier un message à envoyer au moment de l'ouverture de la chasse au trésor (sur le salon de notre choix)
 
+On peut afficher la liste de toutes les chasses au trésor programmées et supprimer une chasse au trésor
+
 ## Les différentes commandes
 `!help` = Affiche l'aide\
 `!ajouter` = Lance le menu pour programmer une chasse au trésor\
-`!liste` = Liste les chasses au trésor programmées (Pas encore fonctionnel)
+`!liste` = Liste les chasses au trésor programmées
 
 ## A Faire
-- Voir les chasses au trésor programmées
-- Supprimer une chasses au trésor programmée
-- Restreindre la programmation/suppression des chasses au trésor à un certain rôle/aux personnes ayant les permissions admin
 - (Programmer une chasse au trésor toutes les semaines à X heure)
 
 

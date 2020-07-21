@@ -8,6 +8,8 @@ import datetime
 import asyncio
 #---------------
 
+## La partie liste n'a pas été testée. A tester
+
 
 class Bot():
     def __init__(self):
@@ -253,48 +255,86 @@ class Bot():
                         # await msg_base.edit(content=text_msg)
                         return
 
-            # if message.content.startswith(f"{PREFIX}liste"):
-            #     data = self.recup_data_json()
-            #     if data == []
-            #         msg_liste = "Pas de chasse au trésor programmée"
-            #         await message.channel.send(msg_liste)
-            #         return
+            if message.content.startswith(f"{PREFIX}liste"):
+                data = self.recup_data_json()
+                if data == []:
+                    msg_liste = "Pas de chasse au trésor programmée"
+                    await message.channel.send(msg_liste)
+                    return
 
-            #     msg_liste = "__**Voici la liste des chasses au trésor : **__\n\n" \
+                msg_liste = "__**Voici la liste des chasses au trésor : **__\n\n"
 
-            #     a = 0
-            #     for i in data:
-            #         a += 1
+                a = 0
+                for i in data:
+                    a += 1
 
-            #         msg_liste += f"__Chasse au trésor {a} : __\n" \
-            #                         f"Heure de la chasse au trésor : aujourd'hui à {i["heure_chasse"]}h \n" \
-            #                         f"Salon de la chasse au trésor : <#{i["salon_chasse"]}>\n" \
+                    msg_liste += f"__Chasse au trésor {a} : __\n" \
+                                f"Heure de la chasse au trésor : aujourd'hui à {i['heure_chasse']}h \n" \
+                                f"Salon de la chasse au trésor : <#{i['salon_chasse']}>\n" \
 
-            #         if i["annonce"] == True:
-            #             msg_liste += f"Salon de l'annonce de la chasse au trésor : <#{i["salon_annonce"]}>\n" \
-            #                         f"Message d'annonce : {i["message_annonce"]}\n\n" \
+                    if i["annonce"] == True:
+                        msg_liste += f"Salon de l'annonce de la chasse au trésor : <#{i['salon_annonce']}>\n" \
+                                    f"Message d'annonce : {i['message_annonce']}\n\n" \
 
-            #     msg_liste += "\nPour supprimez une chasse, cliquez sur la réaction :one:"
+                msg_liste += "\nPour supprimez une chasse, cliquez sur la réaction :one:"
 
-            #     msg_base = await message.channel.send(msg_liste)
+                msg_base = await message.channel.send(msg_liste)
+                await msg_base.add_reaction("1️⃣")
 
-            #     def check(reaction, user):
-            #         return user == message.author and (str(reaction.emoji) == "1️⃣")
+                def check(reaction, user):
+                    return user == message.author and (str(reaction.emoji) == "1️⃣")
 
-            #     try:
-            #         reaction, user = await bot.wait_for('reaction_add', timeout=20.0, check=check)
-            #     except asyncio.TimeoutError:
-            #         # await msg_base.edit(content="Trop Tard...")
-            #         return
-            #     await msg_base.remove_reaction("1️⃣")
-            #     try:
-            #         await msg_base.clear_reactions()
-            #     except Exception as e:
-            #         print("Erreur clear reactions : ",e)
+                try:
+                    reaction, user = await bot.wait_for('reaction_add', timeout=20.0, check=check)
+                except asyncio.TimeoutError:
+                    # await msg_base.edit(content="Trop Tard...")
+                    return
+                await msg_base.remove_reaction("1️⃣",bot.user)
+                try:
+                    await msg_base.clear_reactions()
+                except Exception as e:
+                    print("Erreur clear reactions : ",e)
 
-            #     msg = "__**Quelle chasse au trésor voulez-vous supprimer ? __**"
+                msg = "__**Suppression d'une chasse au trésor**__\n\n"
+                msg += "Voici la liste des chasses programmées : \n\n"
+                a = 0
+                for i in data:
+                    a += 1
+                    msg += f"__Chasse au trésor {a} : __\n" \
+                    f"Heure de la chasse au trésor : aujourd'hui à {i['heure_chasse']}h \n" \
+                    f"Salon de la chasse au trésor : <#{i['salon_chasse']}>\n" \
 
+                    if i["annonce"] == True:
+                        msg += f"Salon de l'annonce de la chasse au trésor : <#{i['salon_annonce']}>\n" \
+                        f"Message d'annonce : {i['message_annonce']}\n\n" 
+                msg += "Ecrivez le numéro de la chasse que vous voulez supprimer (Exemple : pour supprimer la chasse numéro 2, écrivez 2)"
 
+                await message.channel.send(msg)
+
+                def check(m):
+                    return m.author == message.author and m.channel == message.channel
+
+                try:
+                    nombre_a_suppr = await bot.wait_for('message', timeout=60.0, check=check)
+                    nombre_a_suppr = nombre_a_suppr.content
+                except asyncio.TimeoutError:
+                    return
+
+                try:
+                    nombre_a_suppr = int(nombre_a_suppr)
+                except Exception as e:
+                    print(e)
+                    await message.channel.send(f"Erreur, {nombre_a_suppr} n'est pas un nombre")
+                    return
+
+                try:
+                    del data[nombre_a_suppr - 1]
+                    self.enregister_data_json(data)
+                    await message.channel.send("La chasse a été supprimée.")
+                except Exception as e:
+                    print(e)
+                    await message.channel.send(f"Erreur, la chasse {nombre_a_suppr} n'a pas pu être supprimée.")
+                    return
 
 
 
