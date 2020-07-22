@@ -8,8 +8,6 @@ import datetime
 import asyncio
 #---------------
 
-## La partie liste n'a pas été testée. A tester
-
 
 class Bot():
     def __init__(self):
