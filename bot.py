@@ -6,6 +6,8 @@ import time
 import json
 import datetime
 import asyncio
+
+import utils
 #---------------
 
 
@@ -234,9 +236,9 @@ class Bot():
 
                     if reaction.emoji == "1️⃣":
                         if annonce == True:
-                            retour = self.ajouter_data_json(heure_chasse_tresor, channel_a_rendre_public.id, annonce, channel_annonce.id, message_a_envoyer)
+                            retour = utils.ajouter_data_json(heure_chasse_tresor, channel_a_rendre_public.id, annonce, channel_annonce.id, message_a_envoyer)
                         else:
-                            retour = self.ajouter_data_json(heure_chasse_tresor, channel_a_rendre_public.id, annonce)
+                            retour = utils.ajouter_data_json(heure_chasse_tresor, channel_a_rendre_public.id, annonce)
                         
 
                         if retour == "Ok":
@@ -254,7 +256,7 @@ class Bot():
                         return
 
             if message.content.startswith(f"{PREFIX}liste"):
-                data = self.recup_data_json()
+                data = utils.recup_data_json()
                 if data == []:
                     msg_liste = "Pas de chasse au trésor programmée"
                     await message.channel.send(msg_liste)
@@ -332,7 +334,7 @@ class Bot():
 
                 try:
                     del data[nombre_a_suppr - 1]
-                    self.enregister_data_json(data)
+                    utils.enregister_data_json(data)
                     await message.channel.send("La chasse a été supprimée.")
                 except Exception as e:
                     print(e)
@@ -346,7 +348,7 @@ class Bot():
             await bot.wait_until_ready()
             while True:
 
-                data = self.recup_data_json()
+                data = utils.recup_data_json()
                 new_data = data[:]
 
                 modif = False
@@ -371,61 +373,14 @@ class Bot():
                         new_data.remove(data[i])
 
                 if modif == True:
-                    self.enregister_data_json(new_data)
+                    utils.enregister_data_json(new_data)
 
                 await asyncio.sleep(5)
 
 
 
-
         bot.loop.create_task(background())
         bot.run(TOKEN)
-
-
-    def ajouter_data_json(self, heure_chasse_tresor, channel_a_rendre_public, annonce, channel_annonce="", message_a_envoyer=""):
-        try:
-            with open("data.json", "r") as fichier:
-                data = json.load(fichier)
-        except Exception as e:
-            print(e)
-            return f"Erreur : {e}\nZone erreur 1"
-
-
-        if annonce == True:
-            data.append({"heure_chasse":heure_chasse_tresor, "salon_chasse":channel_a_rendre_public, 
-                        "annonce":annonce, "salon_annonce":channel_annonce, "message_annonce":message_a_envoyer})
-        else:
-            data.append({"heure_chasse":heure_chasse_tresor, "salon_chasse":channel_a_rendre_public, 
-                        "annonce":annonce})
-        
-
-        try:
-            with open("data.json", "w") as fichier:
-                json.dump(data, fichier)
-        except Exception as e:
-            print(e)
-            return f"Erreur : {e}\nZone erreur 2"
-
-        return "Ok"
-
-
-    def recup_data_json(self):
-        try:
-            with open("data.json", "r") as fichier:
-                data = json.load(fichier)
-            return data
-        except Exception as e:
-            print(e)
-            return f"Erreur : {e}\nZone erreur 3"
-
-    def enregister_data_json(self, data):
-        try:
-            with open("data.json", "w") as fichier:
-                json.dump(data, fichier)
-        except Exception as e:
-            print(e)
-            return f"Erreur : {e}\nZone erreur 4"
-
 
 if __name__ == '__main__':
     bot = Bot()
